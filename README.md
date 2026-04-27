@@ -45,7 +45,7 @@
 
 ## 📖 Table of Contents
 1. [The Problem & Business Impact](#-the-problem--business-impact)
-2. [God-Tier Architecture](#-god-tier-architecture)
+2. [Enterprise Technical Architecture](#-enterprise-technical-architecture)
 3. [The RAG Pipeline (Data Flow)](#-the-rag-pipeline-data-flow)
 4. [Enterprise Frontend Features](#-enterprise-frontend-features)
 5. [Performance Metrics](#-performance-metrics)
@@ -66,7 +66,7 @@ A highly-tuned Hybrid RAG pipeline that digests BIS PDFs and answers complex com
 
 ---
 
-## 🧠 God-Tier Architecture
+## 🧠 Enterprise Technical Architecture
 
 BIS-RAG Pro doesn't rely on simple vector similarity. It utilizes a state-of-the-art **Hybrid Search + Re-ranking Strategy** to guarantee pinpoint accuracy on technical specs.
 
