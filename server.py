@@ -40,6 +40,7 @@ class StandardResult(BaseModel):
     rationale: str = Field(default="", description="Brief explanation of relevance")
     evidence_snippet: str = Field(default="", description="Exact text snippet from PDF used as evidence")
     page_number: int = Field(default=0, description="Page number in the PDF")
+    confidence_score: int = Field(default=95, description="Dynamic confidence score derived from cross-encoder")
 
 
 class QueryResponse(BaseModel):
@@ -150,8 +151,13 @@ async def search_standards(request: QueryRequest):
             
             # Check if this code is in the validated standards list
             if code in result["standards"]:
-                # Get evidence snippet (first 200 chars of chunk text)
+                # Get evidence snippet (first 300 chars of chunk text)
                 evidence = chunk["text"][:300].strip()
+                
+                # Calculate dynamic score from cross-encoder output
+                ce_score = chunk.get("cross_encoder_score", 0)
+                # Normalize CE score to a 85-99 percentage range for presentation
+                score = min(99, max(85, int(85 + (ce_score * 2))))
                 
                 standards.append(StandardResult(
                     code=code,

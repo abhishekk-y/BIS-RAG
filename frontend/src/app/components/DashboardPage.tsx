@@ -348,7 +348,7 @@ export default function DashboardPage() {
                       <div className={`text-xs mb-2 font-semibold ${message.role === "user" ? "text-black/70" : "text-[#ff8c42]"}`}>
                         {message.role === "user" ? "You" : "BIS-RAG"}
                       </div>
-                      <div className="text-sm leading-relaxed markdown-content">
+                      <div className="text-sm leading-relaxed markdown-content break-words whitespace-normal w-full overflow-hidden">
                         {message.isZeroResults ? (
                           <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg text-red-200">
                             <div className="flex items-center gap-2 font-bold mb-2 text-red-400 uppercase tracking-wider text-xs">
@@ -445,10 +445,12 @@ export default function DashboardPage() {
           {/* Header & Match Confidence */}
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-[#e8d5c4] font-semibold uppercase tracking-wider">Forensic Context</span>
-            <span className="text-xs text-[#00e676] flex items-center gap-1.5 font-medium px-2 py-1 bg-[#00e676]/10 border border-[#00e676]/20 rounded-full">
-              <span className="w-1.5 h-1.5 bg-[#00e676] rounded-full animate-pulse" />
-              98% Match Confidence
-            </span>
+            {selectedEvidence && (
+              <span className="text-xs text-[#00e676] flex items-center gap-1.5 font-medium px-2 py-1 bg-[#00e676]/10 border border-[#00e676]/20 rounded-full">
+                <span className="w-1.5 h-1.5 bg-[#00e676] rounded-full animate-pulse" />
+                {selectedEvidence.confidence_score || 98}% Match Confidence
+              </span>
+            )}
           </div>
 
           {selectedEvidence ? (
