@@ -1,0 +1,5 @@
+.env
+__pycache__/
+node_modules/
+.DS_Store
+# We intentionally push chroma_db, bm25_index.pkl and parent_index.json so judges can run without ingesting!

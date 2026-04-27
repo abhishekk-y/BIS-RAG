@@ -1,0 +1,22 @@
+# BIS-RAG Pro — Dependencies
+# Core Backend
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# PDF Parsing
+PyMuPDF>=1.23.0
+pdfplumber>=0.10.0
+
+# Embeddings & Vector Store
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# Sparse Search
+rank-bm25>=0.2.2
+
+# LLM Inference
+groq>=0.4.0
+
+# Utilities
+numpy>=1.24.0

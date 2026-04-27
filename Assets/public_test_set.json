@@ -1,0 +1,72 @@
+[
+  {
+    "id": "PUB-01",
+    "query": "We are a small enterprise manufacturing 33 Grade Ordinary Portland Cement. Which BIS standard covers the chemical and physical requirements for our product?",
+    "expected_standards": [
+      "IS 269: 1989"
+    ]
+  },
+  {
+    "id": "PUB-02",
+    "query": "I need to comply with the regulations for coarse and fine aggregates derived from natural sources intended for use in structural concrete.",
+    "expected_standards": [
+      "IS 383: 1970"
+    ]
+  },
+  {
+    "id": "PUB-03",
+    "query": "What is the official specification for manufacturing precast concrete pipes, both with and without reinforcement, for water mains?",
+    "expected_standards": [
+      "IS 458: 2003"
+    ]
+  },
+  {
+    "id": "PUB-04",
+    "query": "Our company is shifting to manufacturing hollow and solid lightweight concrete masonry blocks. What standard outlines the dimensions and physical requirements?",
+    "expected_standards": [
+      "IS 2185 (Part 2): 1983"
+    ]
+  },
+  {
+    "id": "PUB-05",
+    "query": "Looking for the standard detailing corrugated and semi-corrugated asbestos cement sheets used for roofing and cladding.",
+    "expected_standards": [
+      "IS 459: 1992"
+    ]
+  },
+  {
+    "id": "PUB-06",
+    "query": "What is the Indian Standard covering the manufacture, chemical, and physical requirements for Portland slag cement?",
+    "expected_standards": [
+      "IS 455: 1989"
+    ]
+  },
+  {
+    "id": "PUB-07",
+    "query": "We are setting up a plant to produce Portland pozzolana cement that is calcined clay based. What is the applicable standard?",
+    "expected_standards": [
+      "IS 1489 (Part 2): 1991"
+    ]
+  },
+  {
+    "id": "PUB-08",
+    "query": "Which standard applies to masonry cement used for general purposes where mortars for masonry are required, but not intended for structural concrete?",
+    "expected_standards": [
+      "IS 3466: 1988"
+    ]
+  },
+  {
+    "id": "PUB-09",
+    "query": "Looking for the standard that details the composition, manufacture, and testing of supersulphated cement, particularly for marine works or aggressive water conditions.",
+    "expected_standards": [
+      "IS 6909: 1990"
+    ]
+  },
+  {
+    "id": "PUB-10",
+    "query": "Our company manufactures White Portland cement for architectural and decorative purposes. Which standard governs its physical and chemical requirements?",
+    "expected_standards": [
+      "IS 8042: 1989"
+    ]
+  }
+]
