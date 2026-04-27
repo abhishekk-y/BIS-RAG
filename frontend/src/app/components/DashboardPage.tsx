@@ -366,7 +366,7 @@ export default function DashboardPage() {
                               li: ({ node, ...props }) => <li {...props} />,
                             }}
                           >
-                            {message.content}
+                            {message.content.replace(/([^\n])\n([ \t]*[\*\-] )/g, "$1\n\n$2")}
                           </ReactMarkdown>
                         ) : (
                           <span className="whitespace-pre-wrap">{message.content}</span>

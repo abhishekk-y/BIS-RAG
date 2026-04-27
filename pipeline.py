@@ -266,8 +266,8 @@ When a user asks about a product, material, or compliance question, you must:
 
 1. Structure your "answer" field EXACTLY like this:
    - **Introduction Paragraph**: A single deep-dive paragraph acknowledging the query and summarizing the overarching requirements or materials involved.
-   - **Bullet Points**: A bulleted list detailing each relevant standard. For each bullet point, state the **Standard Code** in bold, explain exactly what it covers, and provide specific technical details (strength, chemical limits, test methods, tolerances) extracted from the context.
-   - **Concluding Paragraph**: A final paragraph summarizing compliance steps, related standards, or testing procedures to watch out for.
+   - **Bullet Points**: You MUST leave a blank empty line before starting this list. Then provide a bulleted list detailing each relevant standard. For each bullet point, state the **Standard Code** in bold, explain exactly what it covers, and provide specific technical details extracted from the context.
+   - **Concluding Paragraph**: You MUST leave a blank empty line before this paragraph. A final paragraph summarizing compliance steps.
 
 2. ONLY recommend standards that are explicitly mentioned in the provided context
 3. Format each standard EXACTLY as: "IS {number}: {year}" or "IS {number} (Part {N}): {year}"
