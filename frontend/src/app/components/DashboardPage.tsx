@@ -107,8 +107,7 @@ export default function DashboardPage() {
     setIsSearching(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const res = await fetch(`${apiUrl}/api/search`, {
+      const res = await fetch(`/api/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery, is_plain_english: isPlainEnglish }),

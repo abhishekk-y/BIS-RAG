@@ -20,6 +20,8 @@ except ImportError:
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -221,6 +223,27 @@ async def list_all_standards():
         return {"total": len(standards), "standards": standards}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================================
+# FRONTEND STATIC FILES (Single Unit Deployment)
+# ============================================================
+
+# Mount static files
+frontend_dist = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "dist")
+
+if os.path.exists(frontend_dist):
+    # Mount assets directory separately so they don't get caught by the catch-all
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # Serve index.html for all other routes to support client-side routing
+        index_path = os.path.join(frontend_dist, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return {"error": "Frontend not built properly."}
+else:
+    print("[SERVER WARNING] Frontend dist folder not found. API only mode.")
 
 
 # ============================================================
