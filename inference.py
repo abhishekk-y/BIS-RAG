@@ -41,7 +41,7 @@ def enforce_bis_format(llm_output_list: list) -> list:
                 code_part, 
                 flags=re.IGNORECASE
             )
-            cleaned.append(f"IS {code_part}: {match.group(2)}")
+            cleaned.append(f"IS {code_part} : {match.group(2)}")
     
     # Deduplicate while preserving order
     seen = set()
@@ -82,7 +82,7 @@ def agentic_validator(generated_standards: list, retrieved_chunks: list) -> list
         for m in re.finditer(code_pattern, text, re.IGNORECASE):
             code_part = m.group(1).strip()
             code_part = re.sub(r'\s*\(\s*Part\s*(\d+)\s*\)', r' (Part \1)', code_part, flags=re.IGNORECASE)
-            valid_codes.add(f"IS {code_part}: {m.group(2)}")
+            valid_codes.add(f"IS {code_part} : {m.group(2)}")
     
     validated = [std for std in generated_standards if std in valid_codes]
     return validated

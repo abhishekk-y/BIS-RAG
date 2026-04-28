@@ -76,9 +76,9 @@ def extract_standards(full_text: str) -> list[dict]:
         year = match.group(2).strip()
         title_raw = match.group(3).strip()
         
-        # Normalize the IS code format: "IS XXX: YYYY" or "IS XXX (Part N): YYYY"
+        # Normalize the IS code format: "IS XXX : YYYY" or "IS XXX (Part N) : YYYY"
         code_raw = re.sub(r'\s*\(\s*Part\s*(\d+)\s*\)', r' (Part \1)', code_raw, flags=re.IGNORECASE)
-        is_code = f"IS {code_raw}: {year}"
+        is_code = f"IS {code_raw} : {year}"
         
         # Clean the title
         title = re.sub(r'\s+', ' ', title_raw).strip()

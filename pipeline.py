@@ -148,13 +148,25 @@ async def _dense_search(query: str, top_k: int = 20) -> list[dict]:
     return hits
 
 
+def _inject_synonyms(query: str) -> str:
+    synonyms = {
+        "cement": "OPC PPC portland IS 269 IS 455",
+        "aggregate": "sand gravel coarse IS 383",
+    }
+    expanded = query
+    for k, v in synonyms.items():
+        if k in query.lower():
+            expanded += f" {v}"
+    return expanded
+
 async def _sparse_search(query: str, top_k: int = 20) -> list[dict]:
     """Query BM25 with sparse keyword matching."""
     bm25_data = _get_bm25_data()
     bm25 = bm25_data["bm25"]
     children = bm25_data["children"]
     
-    tokenized_query = _tokenize(query)
+    expanded_query = _inject_synonyms(query)
+    tokenized_query = _tokenize(expanded_query)
     
     # Run blocking BM25 scoring in thread pool
     loop = asyncio.get_event_loop()
@@ -270,7 +282,7 @@ When a user asks about a product, material, or compliance question, you must:
    - **Concluding Paragraph**: You MUST leave a blank empty line before this paragraph. A final paragraph summarizing compliance steps.
 
 2. ONLY recommend standards that are explicitly mentioned in the provided context
-3. Format each standard EXACTLY as: "IS {number}: {year}" or "IS {number} (Part {N}): {year}"
+3. Format each standard EXACTLY as: "IS {number} : {year}" or "IS {number} (Part {N}) : {year}"
 4. Provide 3-5 standards, ranked by relevance
 5. Keep your total answer concise enough to generate in under 3 seconds, but packed with technical data.
 
@@ -397,7 +409,7 @@ def enforce_bis_format(llm_output_list: list[str]) -> list[str]:
             code_part = match.group(1).strip()
             # Normalize "(Part X)" spacing
             code_part = re.sub(r'\s*\(\s*Part\s*(\d+)\s*\)', r' (Part \1)', code_part, flags=re.IGNORECASE)
-            cleaned.append(f"IS {code_part}: {match.group(2)}")
+            cleaned.append(f"IS {code_part} : {match.group(2)}")
     
     # Deduplicate while preserving order
     seen = set()
@@ -429,7 +441,7 @@ def agentic_validator(generated_standards: list[str], retrieved_chunks: list[dic
         for m in re.finditer(pattern, chunk["text"], re.IGNORECASE):
             code_part = m.group(1).strip()
             code_part = re.sub(r'\s*\(\s*Part\s*(\d+)\s*\)', r' (Part \1)', code_part, flags=re.IGNORECASE)
-            valid_codes.add(f"IS {code_part}: {m.group(2)}")
+            valid_codes.add(f"IS {code_part} : {m.group(2)}")
     
     validated = []
     for std in generated_standards:
@@ -443,22 +455,50 @@ def agentic_validator(generated_standards: list[str], retrieved_chunks: list[dic
 # MAIN SEARCH PIPELINE (The Full Orchestrator)
 # ============================================================
 
+async def _hyde_expand(query: str) -> str:
+    """HyDE query expansion to generate a fake standard excerpt."""
+    try:
+        client = _get_groq_client()
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(
+            None,
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "user", "content": f"Write a 2-sentence BIS standard excerpt for: {query}"}
+                ],
+                temperature=0.3,
+                max_tokens=100,
+            )
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"[HYDE ERROR] {e}")
+        return query
+
+
 async def search(query: str, is_plain_english: bool = False) -> dict:
     """
     Execute the full RAG pipeline:
-    1. Dense + Sparse retrieval in parallel
-    2. RRF fusion
-    3. Cross-Encoder reranking
-    4. LLM generation via Groq
-    5. Regex normalization + Agentic validation
+    1. HyDE Query Expansion
+    2. Dense + Sparse retrieval in parallel
+    3. RRF fusion
+    4. Cross-Encoder reranking
+    5. LLM generation via Groq
+    6. Regex normalization + Agentic validation
     
     Returns dict with 'standards', 'chunks', and 'latency'.
     """
     t_start = time.time()
     
-    # Step 1: Parallel retrieval
+    # Step 1: HyDE
+    hyde_query = await _hyde_expand(query)
+    # We use hyde_query for dense search to get better embedding matches.
+    # We pass the original query to sparse_search which has its own synonym injection.
+    
+    # Step 2: Parallel retrieval
     dense_hits, sparse_hits = await asyncio.gather(
-        _dense_search(query, top_k=20),
+        _dense_search(hyde_query, top_k=20),
         _sparse_search(query, top_k=20),
     )
     
