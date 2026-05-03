@@ -32,10 +32,8 @@
   <p align="center">
     <b>1. Enterprise Landing Page</b><br/>
     <img src="Assets/screenshots/landing_page.png" width="800"/><br/><br/>
-    
     <b>2. Search Experience & Forensic Audit Trail</b><br/>
     <img src="Assets/screenshots/search_results.png" width="800"/><br/><br/>
-    
     <b>3. Initial Dashboard View</b><br/>
     <img src="Assets/screenshots/dashboard_initial.png" width="800"/>
   </p>
