@@ -1,16 +1,22 @@
-# BIS-RAG Pro — Dependencies
+# BIS-RAG Pro — Dependencies (Optimized for Render Free Tier)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # Core Backend
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
+python-dotenv>=1.0.0
 
 # PDF Parsing
 PyMuPDF>=1.23.0
 pdfplumber>=0.10.0
 
+# Machine Learning (CPU Only to save 2GB+ space/RAM)
+torch --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers>=2.2.0
+
 # Embeddings & Vector Store
 chromadb>=0.4.0
-sentence-transformers>=2.2.0
 
 # Sparse Search
 rank-bm25>=0.2.2

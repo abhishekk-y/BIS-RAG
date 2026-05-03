@@ -66,24 +66,14 @@ class HealthResponse(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Pre-load all models and indices on startup for fast first queries."""
-    print("[SERVER] Warming up pipeline...")
-    try:
-        from pipeline import (
-            _get_chroma_collection,
-            _get_bm25_data,
-            _get_cross_encoder,
-            _get_parent_index,
-        )
-        _get_chroma_collection()
-        _get_bm25_data()
-        _get_cross_encoder()
-        _get_parent_index()
-        print("[SERVER] All models warmed up successfully!")
-    except Exception as e:
-        print(f"[SERVER WARNING] Warmup failed: {e}")
-        print("[SERVER] Pipeline will lazy-load on first request.")
-    
+    """Allow server to start instantly; models will lazy-load on first request."""
+    print("[SERVER] Starting instantly (lazy-loading enabled)...")
+    # Warmup disabled for Render Free Tier to avoid startup timeout
+    # from pipeline import _get_chroma_collection, _get_bm25_data, _get_cross_encoder, _get_parent_index
+    # _get_chroma_collection()
+    # _get_bm25_data()
+    # _get_cross_encoder()
+    # _get_parent_index()
     yield
     print("[SERVER] Shutting down...")
 
@@ -145,14 +135,20 @@ async def search_standards(request: QueryRequest):
         result = await search(request.query, request.is_plain_english)
         parent_index = _get_parent_index()
         
+        from pipeline import enforce_bis_format
+
         # Build rich response with evidence
         standards = []
         for chunk in result.get("chunks", []):
-            code = chunk["metadata"]["parent_is_code"]
+            raw_code = chunk["metadata"]["parent_is_code"]
             title = chunk["metadata"].get("parent_title", "")
             
+            # Normalize the code to match what pipeline.py returns
+            norm_res = enforce_bis_format([raw_code])
+            code = norm_res[0] if norm_res else raw_code
+            
             # Check if this code is in the validated standards list
-            if code in result["standards"]:
+            if code in result["standards"] or raw_code in result["standards"]:
                 # Get evidence snippet (first 300 chars of chunk text)
                 evidence = chunk["text"][:300].strip()
                 
@@ -167,19 +163,29 @@ async def search_standards(request: QueryRequest):
                     rationale=f"Matched via hybrid retrieval (dense + sparse + cross-encoder reranking)",
                     evidence_snippet=evidence,
                     page_number=chunk["metadata"].get("page_start", 0),
+                    confidence_score=score,
                 ))
         
         # Add any standards from LLM that aren't in chunks
         seen_codes = {s.code for s in standards}
+        
+        # Create a normalized lookup map for parent_index
+        normalized_parent_index = {}
+        for k, v in parent_index.items():
+            norm_k_res = enforce_bis_format([k])
+            norm_k = norm_k_res[0] if norm_k_res else k
+            normalized_parent_index[norm_k] = v
+
         for code in result["standards"]:
             if code not in seen_codes:
-                parent_data = parent_index.get(code, {})
+                parent_data = normalized_parent_index.get(code, {})
                 standards.append(StandardResult(
                     code=code,
                     title=parent_data.get("title", ""),
                     rationale="Recommended by LLM based on context analysis",
                     evidence_snippet=parent_data.get("full_text", "")[:300],
                     page_number=parent_data.get("page_start", 0),
+                    confidence_score=85,
                 ))
         
         # Build a natural language answer from the LLM

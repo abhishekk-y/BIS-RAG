@@ -26,18 +26,18 @@
 
 ## 📸 Interactive Showcase
 <details open>
-  <summary><b>🔥 Click to view the BIS-RAG Pro Interface (Slideshow)</b></summary>
+  <summary><b>🔥 Click to view the BIS-RAG Pro Interface</b></summary>
   <br/>
   
   <p align="center">
-    <b>1. Enterprise Dashboard & Markdown Output</b><br/>
-    <img src="https://via.placeholder.com/1200x600/1a1a1a/ff8c42?text=Main+Dashboard+-+Deep+Technical+Markdown+Output" width="800"/><br/><br/>
+    <b>1. Enterprise Landing Page</b><br/>
+    <img src="Assets/screenshots/landing_page.png" width="800"/><br/><br/>
     
-    <b>2. Forensic Audit Trail (Right Panel Expanded)</b><br/>
-    <img src="https://via.placeholder.com/1200x600/0f0f0f/00e676?text=Forensic+Audit+Trail+-+98%25+Match+Confidence" width="800"/><br/><br/>
+    <b>2. Search Experience & Forensic Audit Trail</b><br/>
+    <img src="Assets/screenshots/search_results.png" width="800"/><br/><br/>
     
-    <b>3. Graceful Fallback (Zero Hallucination Guard)</b><br/>
-    <img src="https://via.placeholder.com/1200x600/1a1a1a/ef4444?text=Compliance+Safety+Alert+-+Zero+Results+Fallback" width="800"/>
+    <b>3. Initial Dashboard View</b><br/>
+    <img src="Assets/screenshots/dashboard_initial.png" width="800"/>
   </p>
 </details>
 
